@@ -19,9 +19,9 @@ clean:
 makec:
 	gcc TCP_Client/client.c -o client
 runs:
-	./server 5551
+	./server 5550
 runc:
-	./client 127.0.0.1 5551
+	./client 127.0.0.1 5550
 test2:
 	gcc -pthread tcp_test.c -o test1
 	./test1 5550 10

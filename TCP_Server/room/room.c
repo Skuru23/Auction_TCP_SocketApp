@@ -96,7 +96,7 @@ int out_room(int sesit){
     for (int i = 0; i < 3; i++)
     {
         if(room_store[sess_store[sesit].in_room].userList[i] == sesit) {
-            room_store[sess_store[sesit].in_room].userList[i] == -1;
+            room_store[sess_store[sesit].in_room].userList[i] = -1;
             break;
         }
     }
