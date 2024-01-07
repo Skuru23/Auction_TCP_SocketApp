@@ -1,6 +1,11 @@
 #ifndef BID_H
 #define BID_H
 
+/**
+ * Start a new auction for first item in queue
+ * 
+ * @param roomit: iterator of room in room storage
+*/
 void start_auction(int roomit);
 
 /**

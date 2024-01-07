@@ -2,6 +2,7 @@
 #include <string.h>
 #include "auth_handle.h"
 #include "../val/global_var.h"
+
 #define BUFF_SIZE 1024
 
 enum AuthStatus login_handle(char *username, char *password)
@@ -9,6 +10,7 @@ enum AuthStatus login_handle(char *username, char *password)
     FILE *fp = fopen("account.txt", "r");
     char line[BUFF_SIZE];
     char check_name[1000];
+
     char check_password[1000];
     while (fgets(line, BUFF_SIZE, fp) != NULL)
     {
@@ -17,8 +19,10 @@ enum AuthStatus login_handle(char *username, char *password)
         {
             if (!strcmp(password, check_password))
             {
-                for(int i = 0; i < __FD_SETSIZE; i++){
-                    if(!strcmp(sess_store[i].username,username)) return LG_OTHER_CLIENT;
+                for (int i = 0; i < __FD_SETSIZE; i++)
+                {
+                    if (!strcmp(sess_store[i].username, username))
+                        return LG_OTHER_CLIENT;
                 }
                 return LOGIN_SUCCESS;
             }

@@ -2,7 +2,9 @@
 #define SESSION_H
 
 #define BUFF_SIZE 1024
-
+/**
+ * Struct describe session
+*/
 typedef struct session
 {
     int conn_sock;

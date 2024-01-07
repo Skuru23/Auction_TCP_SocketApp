@@ -7,7 +7,8 @@
 void init_room_store()
 {
     for (int i = 0; i < ROOM_NUM; i++)
-    {
+    {   
+        memset(room_store[i].name, '\0', ROOM_NAME_MAX_LENGTH);
         room_store[i].item_queue = NULL;
         room_store[i].userNum = -1;
         for (int j = 0; j < 30; j++)
@@ -15,10 +16,17 @@ void init_room_store()
             room_store[i].userList[j] = -1;
         }
     }
-    strcpy(room_store[2].name, "test_room1");
     printf("Init room\n");
 }
 
+/***
+ * find room by name in room storage
+ * 
+ * @param room_name: name of room to find
+ * 
+ * @return :i index of this room in room storage
+ *          -1 if not found
+*/
 int findRoom(char room_name[])
 {
     for (int i = 0; i < ROOM_NUM; i++)
@@ -69,10 +77,10 @@ enum RoomStatus join_room(char room_name[], int sesit)
         return ROOM_NOT_FOUND;
     }
 
-    if (room_store[it].userNum == 3)
+    if (room_store[it].userNum == ROOM_NUM)
         return FULL_ROOM;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < ROOM_NUM; i++)
     {
         if (room_store[it].userList[i] == -1)
         {
@@ -93,7 +101,7 @@ int out_room(int sesit){
     if (sess_store[sesit].in_room == -1)
         return 3; // account not in room
     room_store[sess_store[sesit].in_room].userNum--;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < ROOM_NUM; i++)
     {
         if(room_store[sess_store[sesit].in_room].userList[i] == sesit) {
             room_store[sess_store[sesit].in_room].userList[i] = -1;

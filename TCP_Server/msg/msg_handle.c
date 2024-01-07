@@ -16,21 +16,10 @@
 #define BUFF_SIZE 1024
 #define DELIMITER "\r\n"
 
-/**
- * Handle receive message from client, recieve message and handle stream, handle request
- *
- * @param conn_sock: number of connected socket that used to communicate with client
- * @param login_state: loggin state of client that connected to conn_sock
- * @param buff: buffer of stream handling for client that connected with conn_sock
- *
- * @return :1 if handle success
- *          0 if get an error or connection close
- *
- */
 int msg_handle(int sesit)
 {
     // sess[sesit].buff  luu request tach ra tu message
-    char *req = (char *)malloc(BUFF_SIZE); // Nhan tin nhan
+    char *req = (char *)malloc(BUFF_SIZE);
     char tmp[BUFF_SIZE];
     memset(req, '\0', sizeof(req));
     memset(tmp, '\0', sizeof(tmp));
@@ -61,10 +50,13 @@ int msg_handle(int sesit)
             int part2_n = strlen(part2);
             strncat(sess_store[sesit].buff, req, strlen(req) - part2_n);
             printf("%d: %s\n", sess_store[sesit].conn_sock, sess_store[sesit].buff);
+            if (strlen(sess_store[sesit].buff) > 0)
+            {
                 if (!request_handle(sesit, sess_store[sesit].buff))
                 {
                     return 0;
                 }
+            }
             memset(sess_store[sesit].buff, '\0', sizeof(sess_store[sesit].buff));
             memset(tmp, '\0', sizeof(tmp));
             strcpy(tmp, part2 + 2);

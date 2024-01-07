@@ -5,6 +5,16 @@
 #include "item.h"
 #include "../bid/bid.h"
 
+/***
+ * Create new item node for item queue
+ *
+ * @param name: name of item
+ * @param owner: session index of client
+ * @param start_bid: starting price
+ * @param direct_sell_price: buyout price
+ *
+ * @return :pointer of item node
+ */
 item *create_item_node(char name[], int owner, int start_bid, int direct_sell_price)
 {
     item *node = (item *)malloc(sizeof(item));
@@ -16,7 +26,13 @@ item *create_item_node(char name[], int owner, int start_bid, int direct_sell_pr
     node->next = NULL;
     return node;
 }
-/*Add new item to queue*/
+
+/**
+ * push item to item queue
+ *
+ * @param queue: item queue
+ * @param it: pointer of item
+ */
 void push_item(item **queue, item *it)
 {
     if (*queue == NULL)
@@ -28,7 +44,15 @@ void push_item(item **queue, item *it)
         push_item(&((*queue)->next), it);
     }
 }
-/*Delete item from queue*/
+
+/**
+ * Delete item from queue
+ *
+ * @param queue: item queue
+ * @param name: name of item
+ *
+ * @return :1 if delete successful, 0 if not found
+ */
 int delete_item(item **queue, char name[])
 {
     item *current = *queue;
@@ -51,7 +75,7 @@ int delete_item(item **queue, char name[])
         prev = current;
         current = current->next;
     }
-    return 1;
+    return 0;
 }
 
 int pop_item(item **queue)
@@ -59,6 +83,15 @@ int pop_item(item **queue)
     return delete_item(queue, (*queue)->name);
 }
 
+/**
+ * check item is existt in queue or not
+ *
+ * @param queue: item queue
+ * @param item_name: name of item
+ *
+ * @return :0 if not found
+ *          1 if found
+ */
 int find_item(item *queue, char item_name[])
 {
     item *i = queue;

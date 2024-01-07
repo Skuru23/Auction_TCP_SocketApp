@@ -20,6 +20,12 @@ void res_code_resolver(int res_code)
     case ALREADYLOGIN:
         printf("Already Login\n");
         break;
+    case ACCLOGIN:
+        printf("Account is already login in another client\n");
+        break;
+    case WRONG_PASSWORD:
+        printf("Password is wrong\n");
+        break;
 
     // For logout
     case NOTLOGIN:
@@ -38,6 +44,20 @@ void res_code_resolver(int res_code)
         break;
     case ROOMLFULL:
         printf("Server's room list is full, try another time\n");
+        break;
+
+    // For join room
+    case JOINNOK:
+        printf("Join room successfull\n");
+        break;
+    case ROOMNE:
+        printf("Room not exist\n");
+        break;
+    case ROOMF:
+        printf("Room is full\n");
+        break;
+    case ALREADYINROOM:
+        printf("You are already in room\n");
         break;
 
     // For add item

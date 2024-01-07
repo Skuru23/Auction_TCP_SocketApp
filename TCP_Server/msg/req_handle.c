@@ -148,7 +148,7 @@ int request_handle(int sesit, char *req)
     }
     else if (strcmp(cmd, "ROOML") == 0)
     {
-        send_roomlist(sess_store[sesit].conn_sock, room_store, ROOM_NUM);
+        
     }
     else if (strcmp(cmd, "OUTROOM") == 0) {
         switch (out_room(sesit)){
@@ -169,7 +169,6 @@ int request_handle(int sesit, char *req)
             printf("Agrument not enough\n");
             return send_code(sess_store[sesit].conn_sock, SYNTAXERR);
         }
-        printf("Item adding\n");
         switch (addItem(item_name, stating_bid, direct_sell_price, sesit))
         {
 
@@ -231,6 +230,7 @@ int request_handle(int sesit, char *req)
     else if (strcmp(cmd, "LOGOUT") == 0)
     {
         if (!sess_store[sesit].is_loggedin) return send_code(sess_store[sesit].conn_sock, NOTLOGIN);
+        out_room(sesit);
         sess_store[sesit].username[0] = '\0';
         sess_store[sesit].is_loggedin = 0;
         return send_code(sess_store[sesit].conn_sock, LOGOUTOK);

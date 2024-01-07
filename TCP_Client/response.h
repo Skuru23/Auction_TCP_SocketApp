@@ -12,7 +12,7 @@
 
 #define JOINNOK 1020 //  Join success
 #define NOTLOGIN 2021 //  Not logged in
-#define ROOMNE 2021 //  Room not exist
+#define ROOMNE 2022 //  Room not exist
 #define ROOMF 2023 //  Room is full
 #define ALREADYINROOM 2024 //  Already in other room
 

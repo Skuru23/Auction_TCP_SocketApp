@@ -1,27 +1,13 @@
-CC = gcc
-CFLAGS = -W -pthread
-
-SERVER_SRC_DIR = TCP_Server
-SERVER_SRCS = $(wildcard $(SERVER_SRC_DIR)/*/*.c)
-SERVER_OBJS = $(SERVER_SRCS:.c=.o)
-SERVER = server
-
-all: $(SERVER) makec
-
-$(SERVER): $(SERVER_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
+all:
+	@$(MAKE) -C TCP_Server
+	@$(MAKE) -C TCP_Client
 clean:
-	rm -f $(SERVER_OBJS) $(TARGET)
-makec:
-	gcc TCP_Client/client.c -o client
+	@$(MAKE) -C TCP_Server clean 
+	@$(MAKE) -C TCP_Client clean
 runs:
 	./server 5550
 runc:
-	./client 127.0.0.1 5550
+	./client 127.0.0.1 5551
 test2:
 	gcc -pthread tcp_test.c -o test1
 	./test1 5550 10

@@ -17,17 +17,14 @@ enum RoomStatus
 };
 
 /**
- * Init room_store
- * @param room_store: room_store use to init
- * @param n: number of room
+ * Init room_storage
  */
 void init_room_store();
 
 /**
  * add room to room_store
- * @param room_store: list of room
  * @param name:room name
- * @param n: size of room_store
+ * @param sess: session of user that send create room command
  *
  * @return : room status
  */

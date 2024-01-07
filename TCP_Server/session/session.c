@@ -20,7 +20,6 @@ int create_new_session(int conn_sock){
             sess_store[i].in_room = -1;
             sess_store[i].is_loggedin = 0;
             memset(sess_store[i].username, '\0', sizeof(sess_store[i].username));
-            sess_store[i].username[strlen(sess_store[i].username)] = 'a' + i;
             memset(sess_store[i].buff, '\0', sizeof(sess_store[i].buff));
             return i;
         }

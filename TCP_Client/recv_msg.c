@@ -15,100 +15,85 @@
 
 #include "recv_msg.h"
 #include "response.h"
-/**
- * @function receive_code: receive message from server, resolve and display it
- *
- * @param client_sock: a number of socket use to receive message
- *
- */
-int receive_code(int conn_sock)
-{
-    char res[CODE_SIZE + 1];
-    int received_bytes;
-    while (1)
-    {
-        received_bytes = recv(conn_sock, res, CODE_SIZE, 0);
-        if (received_bytes < 0)
-            perror("\nError1: ");
-        else if (received_bytes == 0)
-        {
-            printf("Connection closed.\n");
-            exit(1);
-        }
-        else
-            break;
-    }
-    res[received_bytes] = '\0';
-    printf("%s\n", res);
-    return atoi(res);
-}
 
-int receive_anno(int conn_sock, int anno_type)
-{
-    char *msg = (char *)malloc(BUFF_SIZE);
-    int received_bytes = recv(conn_sock, msg, BUFF_SIZE, 0);
-    if (received_bytes < 0)
-    {
-        perror("\nError2: ");
-        return 1;
-    }
-    else if (received_bytes == 0)
-    {
-        printf("Connection closed.\n");
-        exit(0);
-    }
-    else
-    {
-        msg[received_bytes] = '\0';
-        switch (anno_type)
-        {
-        case NEWBID:
-            new_bid_msg_resolver(msg);
-            break;
-        case SOLDED:
-            sold_msg_resolver(msg);
-            break;
-        case NEWITEMARRIVED:
-            new_item_msg_resolver(msg);
-            break;
-        case COUNTDOWN:
-            countdown_msg_resolver(msg);
-            break;
-        default:
-            printf("Empty announcement\n");
-            break;
-        }
-        return 0;
-    }
-    return 0;
-}
+#define CODE_SIZE 4
+#define DELIMITER "\r\n"
 
-void *msg_signal_handle(void *conn_sock)
+void msg_handle(char *msg)
 {
+    int code;
+    if (sscanf(msg, "%d", &code) < 1)
+        printf("It's got some bug");
+    switch (code)
+    {
+    case NEWBID:
+        new_bid_msg_resolver(msg + (CODE_SIZE + 1));
+        break;
+    case SOLDED:
+        sold_msg_resolver(msg + (CODE_SIZE + 1));
+        break;
+    case NEWITEMARRIVED:
+        new_item_msg_resolver(msg + (CODE_SIZE + 1));
+        break;
+    case COUNTDOWN:
+        countdown_msg_resolver(msg + (CODE_SIZE + 1));
+        break;
+    default:
+        res_code_resolver(code);
+        break;
+    }
 }
 
 void *recv_msg_handle(void *conn_sock)
 {
     int sockfd = *((int *)conn_sock);
     pthread_detach(pthread_self());
+
+    // sess[sesit].buff  luu request tach ra tu message
+    char *req = (char *)malloc(BUFF_SIZE);
+    char *buff = (char *)malloc(BUFF_SIZE * 2);
+    char tmp[BUFF_SIZE];
+    memset(req, '\0', sizeof(req));
+    memset(tmp, '\0', sizeof(tmp));
+
     while (1)
     {
-        int res_code = receive_code(sockfd);
-        char res[BUFF_SIZE];
-        int received_bytes;
-        switch (res_code)
+        int received_bytes = recv(sockfd, req, BUFF_SIZE, 0);
+        if (received_bytes < 0)
         {
-        case NEWBID:
-        case NEWITEMARRIVED:
-        case SOLDED:
-        case COUNTDOWN:
-            if (receive_anno(sockfd, res_code) != 1)
-                ;
-            break;
-            break;
-        default:
-            res_code_resolver(res_code);
-            break;
+            perror("\nError4: ");
+            pthread_exit(NULL);
+        }
+        else if (received_bytes == 0)
+        {
+            printf("Connection closed\n");
+            pthread_exit(NULL);
+        }
+
+        req[received_bytes] = '\0';
+        while (strlen(req) > 0)
+        {
+            char *part2 = strstr(req, DELIMITER);
+            if (part2 == NULL)
+            {
+                strcat(buff, req);
+                break;
+            }
+            else
+            {
+                int part2_n = strlen(part2);
+                strncat(buff, req, strlen(req) - part2_n);
+                printf("%s\n", buff);
+                if (strlen(buff) > 0)
+                    msg_handle(buff);
+                memset(buff, '\0', sizeof(buff));
+                memset(tmp, '\0', sizeof(tmp));
+                strcpy(tmp, part2 + 2);
+                memset(req, '\0', sizeof(req));
+                strcpy(req, tmp);
+            }
         }
     }
+    free(req);
+    free(buff);
 }

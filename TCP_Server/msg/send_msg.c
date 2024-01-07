@@ -9,28 +9,21 @@
 #include <sys/wait.h>
 #include <arpa/inet.h>
 #include <errno.h>
+
+#include "send_msg.h"
 #include "../room/room.h"
 #define BUFF_SIZE 1024
-
-/**
- * @def send_msg: send message to client via sockfd
- *
- * @param sockfd: number of socket that use to send message
- * @param res_code: result code of request
- * 
- * @return :1 if success
- *          0 if get an error
- */
+#define CODE_SIZE 4
 
 int send_code(int sockfd, int res_code)
 {
-    char buff[4];
+    char buff[CODE_SIZE + 2];
     int sent_bytes, received_bytes;
 
     memset(buff, '\0', sizeof(buff));
-    sprintf(buff, "%d", res_code);
+    sprintf(buff, "%d\r\n", res_code);
 
-    sent_bytes = send(sockfd, &buff, 4, 0);
+    sent_bytes = send(sockfd, &buff, strlen(buff), 0);
     if (sent_bytes < 0)
     {
         perror("\nError6:");
