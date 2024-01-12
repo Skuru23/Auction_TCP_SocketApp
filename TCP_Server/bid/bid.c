@@ -137,12 +137,12 @@ int bidding(int sesit, int bid)
                 sess_store[sesit].username,
                 room_store[sess_store[sesit].in_room].item_queue->name);
         room_anno(sess_store[sesit].in_room, anno_msg);
-        send_code(sess_store[sesit].conn_sock, BIDOK);
 
         printf("Item sold to %s\n", sess_store[sesit].username);
         pop_item(&(room_store[sess_store[sesit].in_room].item_queue));
         if (room_store[sess_store[sesit].in_room].item_queue != NULL)
             start_auction(sess_store[sesit].in_room);
+        send_code(sess_store[sesit].conn_sock, BIDOK);
     }
     else
     {
@@ -158,6 +158,7 @@ int bidding(int sesit, int bid)
                 sess_store[sesit].username,
                 bid);
         room_anno(sess_store[sesit].in_room, anno_msg);
+        send_code(sess_store[sesit].conn_sock, BIDOK);
     }
     return 0;
 }
